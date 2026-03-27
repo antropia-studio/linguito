@@ -18,7 +18,7 @@ export const invariantErrorMessage: Record<InvariantErrorCode, string> = {
   'llm:config:no_provider':
     'Provider missing from Linguito configuration. Please configure a provider using the "config" command',
   'llm:no_models_found': 'No models loaded in your LLM service',
-  missing_lingui_config_file: 'lingui.config.js does not exist or is not readable',
+  missing_lingui_config_file: 'lingui.config.ts or lingui.config.js does not exist or is not readable',
   unknown_catalog_file_format: 'Translation files must be in a known format. Currently supported formats are: po',
 }
 

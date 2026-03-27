@@ -27,11 +27,23 @@ export default abstract class BaseCommand extends Command {
    */
   protected async getConfigFile(projectDir: string) {
     const isProjectDirAFile = await isFile(projectDir)
-    const linguiConfigFilePath = path.resolve(projectDir, isProjectDirAFile ? '' : 'lingui.config.js')
-    const isLinguiConfigFileReadable = await canReadFile(linguiConfigFilePath)
 
-    invariant(isLinguiConfigFileReadable, 'missing_lingui_config_file')
+    if (isProjectDirAFile) {
+      const linguiConfigFilePath = path.resolve(projectDir)
+      const isLinguiConfigFileReadable = await canReadFile(linguiConfigFilePath)
+      invariant(isLinguiConfigFileReadable, 'missing_lingui_config_file')
+      return {directory: path.dirname(linguiConfigFilePath), file: linguiConfigFilePath}
+    }
 
-    return {directory: path.dirname(linguiConfigFilePath), file: linguiConfigFilePath}
+    const tsConfigPath = path.resolve(projectDir, 'lingui.config.ts')
+    if (await canReadFile(tsConfigPath)) {
+      return {directory: path.dirname(tsConfigPath), file: tsConfigPath}
+    }
+
+    const jsConfigPath = path.resolve(projectDir, 'lingui.config.js')
+    const isJsConfigReadable = await canReadFile(jsConfigPath)
+    invariant(isJsConfigReadable, 'missing_lingui_config_file')
+
+    return {directory: path.dirname(jsConfigPath), file: jsConfigPath}
   }
 }
